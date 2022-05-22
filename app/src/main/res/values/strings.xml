@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Proyecto1PDM</string>
+    <string name="id_docente">Id Docente</string>
+    <string name="nombre_docente">Nombre Docente</string>
+    <string name="actualizar">Actualizar</string>
+    <string name="consultar">Consultar</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="insertar">Insertar</string>
+    <string name="limpiar">Limpiar</string>
+    <string name="opciones">Opciones:</string>
+    <string name="id_tipo_evaluador">Id Tipo Evaluador</string>
+    <string name="tipo_evaluador">Tipo Evaluador</string>
+    <string name="descripcion">Descripcion</string>
+</resources>
