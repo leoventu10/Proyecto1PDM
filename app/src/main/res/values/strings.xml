@@ -11,4 +11,6 @@
     <string name="id_tipo_evaluador">Id Tipo Evaluador</string>
     <string name="tipo_evaluador">Tipo Evaluador</string>
     <string name="descripcion">Descripcion</string>
+    <string name="id_plan_estudio">Id Plan Estudio</string>
+    <string name="anio_plan_estudio">Año Plan Estudio</string>
 </resources>

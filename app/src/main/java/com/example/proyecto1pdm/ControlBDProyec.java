@@ -8,11 +8,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.proyecto1pdm.docente.Docente;
+import com.example.proyecto1pdm.plandeestudio.Plandeestudio;
 import com.example.proyecto1pdm.tipoevaluador.Tipoevaluador;
 
 public class ControlBDProyec {
     private static final String[]camposDocente = new String [] {"id_docente","nombre_docente"};
     private static final String[]camposTipoevaluador = new String[] {"id_tipo_evaluador","tipo_evaluador","descripcion"};
+    private static final String[]camposPlandeestudio = new String[] {"id_plan_estudio","anio_plan_estudio"};
     private final Context context;
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
@@ -31,6 +33,7 @@ public class ControlBDProyec {
             try{
                 db.execSQL("CREATE TABLE docente(id_docente VARCHAR(6) NOT NULL PRIMARY KEY,nombre_docente VARCHAR(50));");
                 db.execSQL("CREATE TABLE tipoevaluador(id_tipo_evaluador VARCHAR(6) NOT NULL PRIMARY KEY,tipo_evaluador VARCHAR(30),descripcion VARCHAR(100));");
+                db.execSQL("CREATE TABLE plandeestudio(id_plan_estudio VARCHAR(6) NOT NULL PRIMARY KEY, anio_plan_estudio DATE);");
             }catch(SQLException e){
                 e.printStackTrace();
             }
@@ -81,6 +84,22 @@ public class ControlBDProyec {
         }
         return regInsertados;
     }
+    public String insertarPlandeestudios(Plandeestudio plandeestudio){
+        String regInsertados="Registro Insertado Nº= ";
+        long contador=0;
+        ContentValues plan = new ContentValues();
+        plan.put("id_plan_estudio", plandeestudio.getId_plan_estudio());
+        plan.put("anio_plan_estudio", plandeestudio.getAnio_plan_estudio());
+        contador=db.insert("plandeestudio", null, plan);
+        if(contador==-1 || contador==0)
+        {
+            regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
+        }
+        else {
+            regInsertados=regInsertados+contador;
+        }
+        return regInsertados;
+    }
     /*Codigos de Actualizacion de Datos a las diferentes Tablas*/
     public String actualizarDocente(Docente docente){
         if(verificarIntegridad(docente, 1)){
@@ -105,6 +124,17 @@ public class ControlBDProyec {
             return "Registro con tipoevaluador " + tipoevaluador.getId_tipo_evaluador() + " no existe";
         }
     }
+    public String actualizarPlandeestudios(Plandeestudio plandeestudios){
+        if(verificarIntegridad(plandeestudios, 3)){
+            String[] id = {plandeestudios.getId_plan_estudio()};
+            ContentValues cv = new ContentValues();
+            cv.put("anio_plan_estudio", plandeestudios.getAnio_plan_estudio());
+            db.update("plandeestudio", cv, "id_plan_estudio = ?", id);
+            return "Registro Actualizado Correctamente";
+        }else{
+            return "Registro con plan de estudio " + plandeestudios.getId_plan_estudio() + " no existe";
+        }
+    }
     /*Codigos de Eliminacion de Datos a las diferentes Tablas*/
     public String eliminarDocente(Docente docente){
         String regAfectados="filas afectadas= ";
@@ -117,6 +147,13 @@ public class ControlBDProyec {
         String regAfectados="filas afectadas= ";
         int contador=0;
         contador+=db.delete("tipoevaluador", "id_tipo_evaluador='"+tipoevaluador.getId_tipo_evaluador()+"'", null);
+        regAfectados+=contador;
+        return regAfectados;
+    }
+    public String eliminarPlandeestudio(Plandeestudio plandeestudio){
+        String regAfectados="filas afectadas= ";
+        int contador=0;
+        contador+=db.delete("plandeestudio", "id_plan_estudio='"+plandeestudio.getId_plan_estudio()+"'", null);
         regAfectados+=contador;
         return regAfectados;
     }
@@ -142,6 +179,18 @@ public class ControlBDProyec {
             tip.setTipo_evaluador(cursor.getString(1));
             tip.setDescripcion(cursor.getString(2));
             return tip;
+        }else{
+            return null;
+        }
+    }
+    public Plandeestudio consultarPlandeestudio(String id_plan_estudio){
+        String[] id = {id_plan_estudio};
+        Cursor cursor = db.query("plandeestudio", camposPlandeestudio, "id_plan_estudio = ?", id, null, null, null);
+        if(cursor.moveToFirst()){
+            Plandeestudio plan = new Plandeestudio();
+            plan.setId_plan_estudio(cursor.getString(0));
+            plan.setAnio_plan_estudio(cursor.getString(1));
+            return plan;
         }else{
             return null;
         }
@@ -174,6 +223,19 @@ public class ControlBDProyec {
                 }
                 return false;
             }
+            case 3:
+            {
+                //verificar que exista Plan de estudio
+                Plandeestudio plan = (Plandeestudio) dato;
+                String[] id = {plan.getId_plan_estudio()};
+                abrir();
+                Cursor c2 = db.query("plandeestudio", null, "id_plan_estudio = ?", id, null, null, null);
+                if(c2.moveToFirst()){
+                    //Se encontro Plan de estudio
+                    return true;
+                }
+                return false;
+            }
             default:
                 return false;
         }
@@ -184,9 +246,12 @@ public class ControlBDProyec {
         final String[] VBid_tipo_evaluador = {"EVA001","EVA002","EVA003","EVA004"};
         final String[] VBtipo_evaluador = {"Evaluador Principal","Apoyador","Evaluador Secundario","Juez"};
         final String[] VBdescripcion = {"Evaluador que entrega la nota segun progreso","Evaluador que apoya el evaluador pricipal","Evaluador que apoya al estudiante en el trancurso del proyecto","Evaluador encargado de calificar"};
+        final String[] VCid_plan_estudio = {"PL0001","PL0002","PL0003","PL0004"};
+        final String[] VCanio_plan_estudios = {"2012","2023","2022","2021"};
         abrir();
         db.execSQL("DELETE FROM docente");
         db.execSQL("DELETE FROM tipoevaluador");
+        db.execSQL("DELETE FROM plandeestudio");
         Docente docente = new Docente();
         for(int i=0;i<4;i++){
             docente.setId_docente(VAid_docente[i]);
@@ -199,6 +264,12 @@ public class ControlBDProyec {
             tip.setTipo_evaluador(VBtipo_evaluador[i]);
             tip.setDescripcion(VBdescripcion[i]);
             insertarTipoevaluador(tip);
+        }
+        Plandeestudio plan = new Plandeestudio();
+        for(int i=0;i<4;i++){
+            plan.setId_plan_estudio(VCid_plan_estudio[i]);
+            plan.setAnio_plan_estudio(VCanio_plan_estudios[i]);
+            insertarPlandeestudios(plan);
         }
         cerrar();
         return "Guardo Correctamente";
