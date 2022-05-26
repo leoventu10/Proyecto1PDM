@@ -1,4 +1,4 @@
-package com.example.proyecto1pdm;
+package com.example.proyecto1pdm.carrera;
 
 public class Carrera {
     private String id_carrera;

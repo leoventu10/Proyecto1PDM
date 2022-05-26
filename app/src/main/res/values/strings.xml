@@ -13,4 +13,6 @@
     <string name="descripcion">Descripcion</string>
     <string name="id_plan_estudio">Id Plan Estudio</string>
     <string name="anio_plan_estudio">Año Plan Estudio</string>
+    <string name="id_carrera">Id Carrera</string>
+    <string name="nombre_carrera">Nombre Carrera</string>
 </resources>

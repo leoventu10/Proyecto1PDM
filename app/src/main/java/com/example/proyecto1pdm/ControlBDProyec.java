@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.proyecto1pdm.carrera.Carrera;
 import com.example.proyecto1pdm.docente.Docente;
 import com.example.proyecto1pdm.plandeestudio.Plandeestudio;
 import com.example.proyecto1pdm.tipoevaluador.Tipoevaluador;
@@ -15,6 +16,7 @@ public class ControlBDProyec {
     private static final String[]camposDocente = new String [] {"id_docente","nombre_docente"};
     private static final String[]camposTipoevaluador = new String[] {"id_tipo_evaluador","tipo_evaluador","descripcion"};
     private static final String[]camposPlandeestudio = new String[] {"id_plan_estudio","anio_plan_estudio"};
+    private static final String[]camposCarrera = new String[] {"id_carrera","id_plan_estudio","nombre_carrera"};
     private final Context context;
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
@@ -34,6 +36,7 @@ public class ControlBDProyec {
                 db.execSQL("CREATE TABLE docente(id_docente VARCHAR(6) NOT NULL PRIMARY KEY,nombre_docente VARCHAR(50));");
                 db.execSQL("CREATE TABLE tipoevaluador(id_tipo_evaluador VARCHAR(6) NOT NULL PRIMARY KEY,tipo_evaluador VARCHAR(30),descripcion VARCHAR(100));");
                 db.execSQL("CREATE TABLE plandeestudio(id_plan_estudio VARCHAR(6) NOT NULL PRIMARY KEY, anio_plan_estudio DATE);");
+                db.execSQL("CREATE TABLE carrera(id_carrera VARCHAR(6) NOT NULL PRIMARY KEY, id_plan_estudio VARCHAR(6), nombre_carrera VARCHAR(100), CONSTRAINT fk_carrera FOREIGN KEY (id_plan_estudio) REFERENCES plandeestudio(id_plan_estudio));");
             }catch(SQLException e){
                 e.printStackTrace();
             }
@@ -100,6 +103,25 @@ public class ControlBDProyec {
         }
         return regInsertados;
     }
+    public String insertarCarrera(Carrera carrera){
+        String regInsertados="Registro Insertado Nº= ";
+        long contador=0;
+        if(verificarIntegridad(carrera,4))
+        {
+            ContentValues carr = new ContentValues();
+            carr.put("id_carrera", carrera.getId_carrera());
+            carr.put("id_plan_estudio", carrera.getId_plan_estudio());
+            carr.put("nombre_carrera", carrera.getNombre_carrera());
+            contador=db.insert("carrera", null, carr);
+        }
+        if(contador==-1 || contador==0)
+        {
+            regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
+        } else {
+            regInsertados=regInsertados+contador;
+        }
+        return regInsertados;
+    }
     /*Codigos de Actualizacion de Datos a las diferentes Tablas*/
     public String actualizarDocente(Docente docente){
         if(verificarIntegridad(docente, 1)){
@@ -135,6 +157,17 @@ public class ControlBDProyec {
             return "Registro con plan de estudio " + plandeestudios.getId_plan_estudio() + " no existe";
         }
     }
+    public String actualizarCarrera(Carrera carrera){
+        if(verificarIntegridad(carrera, 5)){
+            String[] id = {carrera.getId_carrera(), carrera.getId_plan_estudio()};
+            ContentValues cv = new ContentValues();
+            cv.put("nombre_carrera", carrera.getNombre_carrera());
+            db.update("carrera", cv, "id_carrera = ? AND id_plan_estudio = ?", id);
+            return "Registro Actualizado Correctamente";
+        }else{
+            return "Registro no Existe";
+        }
+    }
     /*Codigos de Eliminacion de Datos a las diferentes Tablas*/
     public String eliminarDocente(Docente docente){
         String regAfectados="filas afectadas= ";
@@ -154,6 +187,15 @@ public class ControlBDProyec {
         String regAfectados="filas afectadas= ";
         int contador=0;
         contador+=db.delete("plandeestudio", "id_plan_estudio='"+plandeestudio.getId_plan_estudio()+"'", null);
+        regAfectados+=contador;
+        return regAfectados;
+    }
+    public String eliminarCarrera(Carrera carrera){
+        String regAfectados="filas afectadas= ";
+        int contador=0;
+        String datos="id_carrera='"+carrera.getId_carrera()+"'";
+        datos=datos+" AND id_plan_estudio='"+carrera.getId_plan_estudio()+"'";
+        contador+=db.delete("carrera", datos, null);
         regAfectados+=contador;
         return regAfectados;
     }
@@ -191,6 +233,19 @@ public class ControlBDProyec {
             plan.setId_plan_estudio(cursor.getString(0));
             plan.setAnio_plan_estudio(cursor.getString(1));
             return plan;
+        }else{
+            return null;
+        }
+    }
+    public Carrera consultarCarrera(String id_carrera, String id_plan_estudio){
+        String[] id = {id_carrera, id_plan_estudio};
+        Cursor cursor = db.query("carrera", camposCarrera, "id_carrera = ? AND id_plan_estudio = ?", id, null, null, null);
+        if(cursor.moveToFirst()){
+            Carrera carr = new Carrera();
+            carr.setId_carrera(cursor.getString(0));
+            carr.setId_plan_estudio(cursor.getString(1));
+            carr.setNombre_carrera(cursor.getString(2));
+            return carr;
         }else{
             return null;
         }
@@ -236,6 +291,32 @@ public class ControlBDProyec {
                 }
                 return false;
             }
+            case 4:
+            {
+                //verificar que al insertar carrera, exista el plan de estudio
+                Carrera carr = (Carrera) dato;
+                String[] id1 = {carr.getId_plan_estudio()};
+                //abrir();
+                Cursor cursor1 = db.query("plandeestudio", null, "id_plan_estudio = ?", id1, null, null, null);
+                if(cursor1.moveToFirst()){
+                    //Se encontro el plan de estudio
+                    return true;
+                }
+                return false;
+            }
+            case 5:
+            {
+                //verificar que al modificar nota exista carnet del alumno, el codigo de materia y el ciclo
+                Carrera carr = (Carrera) dato;
+                String[] ids = {carr.getId_carrera(), carr.getId_plan_estudio()};
+                abrir();
+                Cursor c = db.query("carrera", null, "id_carrera = ? AND id_plan_estudio = ?", ids, null, null, null);
+                if(c.moveToFirst()){
+                    //Se encontraron datos
+                    return true;
+                }
+                return false;
+            }
             default:
                 return false;
         }
@@ -248,10 +329,14 @@ public class ControlBDProyec {
         final String[] VBdescripcion = {"Evaluador que entrega la nota segun progreso","Evaluador que apoya el evaluador pricipal","Evaluador que apoya al estudiante en el trancurso del proyecto","Evaluador encargado de calificar"};
         final String[] VCid_plan_estudio = {"PL0001","PL0002","PL0003","PL0004"};
         final String[] VCanio_plan_estudios = {"2012","2023","2022","2021"};
+        final String[] VDid_carrera = {"ISI198","IME199","ICI198","IIN197"};
+        final String[] VDid_plan_estudio = {"PL0002","PL0002","PL0001","PL0004"};
+        final String[] VDnombre_carrera = {"Ingenieria en Sistemas","Ingenieria Mecanica","Ingenieria Civil","Ingenieria industrial"};
         abrir();
         db.execSQL("DELETE FROM docente");
         db.execSQL("DELETE FROM tipoevaluador");
         db.execSQL("DELETE FROM plandeestudio");
+        db.execSQL("DELETE FROM carrera");
         Docente docente = new Docente();
         for(int i=0;i<4;i++){
             docente.setId_docente(VAid_docente[i]);
@@ -270,6 +355,13 @@ public class ControlBDProyec {
             plan.setId_plan_estudio(VCid_plan_estudio[i]);
             plan.setAnio_plan_estudio(VCanio_plan_estudios[i]);
             insertarPlandeestudios(plan);
+        }
+        Carrera carrera = new Carrera();
+        for(int i=0;i<4;i++){
+            carrera.setId_carrera(VDid_carrera[i]);
+            carrera.setId_plan_estudio(VDid_plan_estudio[i]);
+            carrera.setNombre_carrera(VDnombre_carrera[i]);
+            insertarCarrera(carrera);
         }
         cerrar();
         return "Guardo Correctamente";

@@ -1,4 +1,4 @@
-package com.example.proyecto1pdm;
+package com.example.proyecto1pdm.carrera;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.example.proyecto1pdm.ControlBDProyec;
 import com.example.proyecto1pdm.R;
-import com.example.proyecto1pdm.Carrera;
+import com.example.proyecto1pdm.carrera.Carrera;
 
 public class CarreraActualizarActivity extends Activity {
     ControlBDProyec helper;

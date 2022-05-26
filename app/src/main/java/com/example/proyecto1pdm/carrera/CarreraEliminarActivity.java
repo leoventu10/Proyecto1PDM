@@ -1,10 +1,14 @@
-package com.example.proyecto1pdm;
+package com.example.proyecto1pdm.carrera;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.proyecto1pdm.ControlBDProyec;
+import com.example.proyecto1pdm.R;
+import com.example.proyecto1pdm.carrera.Carrera;
 
 public class CarreraEliminarActivity extends Activity {
     EditText editId_carrera,editId_plan_estudio;
