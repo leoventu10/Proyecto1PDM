@@ -1,11 +1,14 @@
-package com.example.proyecto1pdm;
+package com.example.proyecto1pdm.ciclo;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.CheckBox;
+
+import com.example.proyecto1pdm.ControlBDProyec;
+import com.example.proyecto1pdm.R;
+import com.example.proyecto1pdm.ciclo.Ciclo;
 
 public class CicloActualizarActivity extends Activity {
     ControlBDProyec helper;

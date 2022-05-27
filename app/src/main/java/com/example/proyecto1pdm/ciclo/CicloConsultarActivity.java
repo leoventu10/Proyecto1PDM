@@ -1,4 +1,4 @@
-package com.example.proyecto1pdm;
+package com.example.proyecto1pdm.ciclo;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.example.proyecto1pdm.ControlBDProyec;
 import com.example.proyecto1pdm.R;
-import com.example.proyecto1pdm.tipoevaluador.Tipoevaluador;
+import com.example.proyecto1pdm.ciclo.Ciclo;
 
 public class CicloConsultarActivity extends Activity {
     ControlBDProyec helper;

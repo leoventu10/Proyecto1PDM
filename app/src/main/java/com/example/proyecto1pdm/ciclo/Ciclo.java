@@ -1,4 +1,4 @@
-package com.example.proyecto1pdm;
+package com.example.proyecto1pdm.ciclo;
 
 public class Ciclo {
     private String id_ciclo;

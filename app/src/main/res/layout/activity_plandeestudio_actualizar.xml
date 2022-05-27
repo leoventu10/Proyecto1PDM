@@ -22,10 +22,12 @@
         <Button
             android:onClick="actualizarPlandeestudio"
             android:text="@string/actualizar" />
-    </TableRow>
-    <TableRow>
+
         <Button
             android:onClick="limpiarTexto"
             android:text="@string/limpiar" />
+    </TableRow>
+    <TableRow>
+
     </TableRow>
 </TableLayout>

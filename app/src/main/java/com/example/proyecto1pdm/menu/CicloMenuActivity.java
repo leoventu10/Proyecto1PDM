@@ -23,7 +23,7 @@ public class CicloMenuActivity extends ListActivity {
         super.onListItemClick(l, v, position, id);
         String nombreValue=activities[position];
         try{
-            Class<?> clase=Class.forName("com.example.proyecto1pdm."+nombreValue);
+            Class<?> clase=Class.forName("com.example.proyecto1pdm.ciclo."+nombreValue);
             Intent inte = new Intent(this,clase);
             this.startActivity(inte);
         }catch(ClassNotFoundException e){

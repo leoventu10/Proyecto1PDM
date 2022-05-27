@@ -1,4 +1,4 @@
-package com.example.proyecto1pdm;
+package com.example.proyecto1pdm.ciclo;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.example.proyecto1pdm.ControlBDProyec;
 import com.example.proyecto1pdm.R;
-import com.example.proyecto1pdm.carrera.Carrera;
+import com.example.proyecto1pdm.ciclo.Ciclo;
 
 public class CicloInsertarActivity extends Activity {
     ControlBDProyec helper;

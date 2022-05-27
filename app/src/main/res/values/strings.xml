@@ -15,4 +15,7 @@
     <string name="anio_plan_estudio">Año Plan Estudio</string>
     <string name="id_carrera">Id Carrera</string>
     <string name="nombre_carrera">Nombre Carrera</string>
+    <string name="id_ciclo">Id Ciclo</string>
+    <string name="numero_ciclo">Numero Ciclo</string>
+    <string name="ciclo_activo">Ciclo Activo</string>
 </resources>

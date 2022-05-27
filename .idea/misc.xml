@@ -8,6 +8,11 @@
         <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_carrera_eliminar.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_carrera_insertar.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_carrera_menu.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_ciclo_actualizar.xml" value="0.47441217150760717" />
+        <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_ciclo_consultar.xml" value="0.3375" />
+        <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_ciclo_eliminar.xml" value="0.3375" />
+        <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_ciclo_insertar.xml" value="0.3234375" />
+        <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_ciclo_menu.xml" value="0.3375" />
         <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_docente_actualizar.xml" value="0.16927083333333334" />
         <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_docente_consultar.xml" value="0.16927083333333334" />
         <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_docente_eliminar.xml" value="0.16927083333333334" />
@@ -15,6 +20,7 @@
         <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_docente_menu.xml" value="0.3375" />
         <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_main.xml" value="0.16927083333333334" />
         <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_plandeestudio_actualizar.xml" value="0.21927083333333333" />
+        <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_plandeestudio_consultar.xml" value="0.3375" />
         <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_tipoevaluador_actualizar.xml" value="0.16927083333333334" />
         <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_tipoevaluador_consultar.xml" value="0.16927083333333334" />
         <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_tipoevaluador_eliminar.xml" value="0.16927083333333334" />
