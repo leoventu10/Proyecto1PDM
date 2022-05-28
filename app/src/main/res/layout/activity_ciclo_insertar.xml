@@ -16,13 +16,6 @@
         <EditText
             android:id="@+id/editNumero_ciclo"
             android:inputType="number"
-            android:maxLength="2" />
-    </TableRow>
-    <TableRow>
-        <TextView android:text="@string/ciclo_activo" />
-        <EditText
-            android:id="@+id/editCiclo_activo"
-            android:inputType="number"
             android:maxLength="1" />
     </TableRow>
 

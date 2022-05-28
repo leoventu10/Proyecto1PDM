@@ -18,7 +18,8 @@ public class ControlBDProyec {
     private static final String[]camposTipoevaluador = new String[] {"id_tipo_evaluador","tipo_evaluador","descripcion"};
     private static final String[]camposPlandeestudio = new String[] {"id_plan_estudio","anio_plan_estudio"};
     private static final String[]camposCarrera = new String[] {"id_carrera","id_plan_estudio","nombre_carrera"};
-    private static final String[]camposCiclo = new String[] {"id_ciclo","numero_ciclo","ciclo_activo"};
+    private static final String[]camposCiclo = new String[] {"id_ciclo","numero_ciclo"};
+    private static final String[]camposGrupo = new String[] {"id_grupo","id_ciclo","id_carrera","fecha_creacion","fecha_modificacion"};
     private final Context context;
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
@@ -39,7 +40,8 @@ public class ControlBDProyec {
                 db.execSQL("CREATE TABLE tipoevaluador(id_tipo_evaluador VARCHAR(6) NOT NULL PRIMARY KEY,tipo_evaluador VARCHAR(30),descripcion VARCHAR(100));");
                 db.execSQL("CREATE TABLE plandeestudio(id_plan_estudio VARCHAR(6) NOT NULL PRIMARY KEY, anio_plan_estudio DATE);");
                 db.execSQL("CREATE TABLE carrera(id_carrera VARCHAR(6) NOT NULL PRIMARY KEY, id_plan_estudio VARCHAR(6), nombre_carrera VARCHAR(100), CONSTRAINT fk_carrera FOREIGN KEY (id_plan_estudio) REFERENCES plandeestudio(id_plan_estudio));");
-                db.execSQL("CREATE TABLE ciclo(id_ciclo VARCHAR(6) NOT NULL PRIMARY KEY, numero_ciclo INTEGER, ciclo_activo BOOLEAN);");
+                db.execSQL("CREATE TABLE ciclo(id_ciclo VARCHAR(6) NOT NULL PRIMARY KEY, numero_ciclo INTEGER);");
+                db.execSQL("CREATE TABLE grupo(id_grupo VARCHAR(6) NOT NULL PRIMARY KEY, id_ciclo VARCHAR(6), id_carrera VARCHAR(6), fecha_creacion DATE, fecha_modificacion DATE, CONSTRAINT fk_grupo_ciclo FOREIGN KEY (id_ciclo) REFERENCES ciclo(id_ciclo), CONSTRAINT fk_grupo_carrera FOREIGN KEY (id_carrera) REFERENCES carrera(id_carrera));");
             }catch(SQLException e){
                 e.printStackTrace();
             }
@@ -131,7 +133,6 @@ public class ControlBDProyec {
         ContentValues cicl = new ContentValues();
         cicl.put("id_ciclo", ciclo.getId_ciclo());
         cicl.put("numero_ciclo", ciclo.getNumero_ciclo());
-        cicl.put("ciclo_activo", ciclo.getCiclo_activo());
         contador=db.insert("ciclo", null, cicl);
         if(contador==-1 || contador==0)
         {
@@ -193,7 +194,6 @@ public class ControlBDProyec {
             String[] id = {ciclo.getId_ciclo()};
             ContentValues cv = new ContentValues();
             cv.put("numero_ciclo", ciclo.getNumero_ciclo());
-            cv.put("ciclo_activo", ciclo.getCiclo_activo());
             db.update("ciclo", cv, "id_ciclo = ?", id);
             return "Registro Actualizado Correctamente";
         }else{
@@ -296,7 +296,6 @@ public class ControlBDProyec {
             Ciclo ciclo = new Ciclo();
             ciclo.setId_ciclo(cursor.getString(0));
             ciclo.setNumero_ciclo(cursor.getInt(1));
-            ciclo.setCiclo_activo(cursor.getString(2));
             return ciclo;
         }else{
             return null;
@@ -399,7 +398,6 @@ public class ControlBDProyec {
         final String[] VDnombre_carrera = {"Ingenieria en Sistemas","Ingenieria Mecanica","Ingenieria Civil","Ingenieria industrial"};
         final String[] VEid_ciclo = {"CI2019","CI2020","CI2021","CI2022"};
         final Integer[] VEnumero_ciclo = {8,7,10,6};
-        final String[] VEciclo_activo = {"0","1","1","0"};
         abrir();
         db.execSQL("DELETE FROM docente");
         db.execSQL("DELETE FROM tipoevaluador");
@@ -436,7 +434,6 @@ public class ControlBDProyec {
         for(int i=0;i<4;i++){
             ciclo.setId_ciclo(VEid_ciclo[i]);
             ciclo.setNumero_ciclo(VEnumero_ciclo[i]);
-            ciclo.setCiclo_activo(VEciclo_activo[i]);
             insertarCiclo(ciclo);
         }
         cerrar();

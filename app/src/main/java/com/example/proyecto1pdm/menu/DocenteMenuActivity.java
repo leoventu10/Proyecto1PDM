@@ -1,4 +1,4 @@
-package com.example.proyecto1pdm;
+package com.example.proyecto1pdm.menu;
 
 import android.app.ListActivity;
 import android.content.Intent;

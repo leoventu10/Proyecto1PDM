@@ -3,7 +3,6 @@ package com.example.proyecto1pdm.ciclo;
 public class Ciclo {
     private String id_ciclo;
     private int numero_ciclo;
-    private String ciclo_activo;
 
     public Ciclo() {
     }
@@ -11,7 +10,6 @@ public class Ciclo {
     public Ciclo(String id_ciclo, int numero_ciclo, String ciclo_activo) {
         this.id_ciclo = id_ciclo;
         this.numero_ciclo = numero_ciclo;
-        this.ciclo_activo = ciclo_activo;
     }
 
     public String getId_ciclo() {
@@ -30,11 +28,4 @@ public class Ciclo {
         this.numero_ciclo = numero_ciclo;
     }
 
-    public String getCiclo_activo() {
-        return ciclo_activo;
-    }
-
-    public void setCiclo_activo(String ciclo_activo) {
-        this.ciclo_activo = ciclo_activo;
-    }
 }
