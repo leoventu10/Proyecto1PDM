@@ -21,4 +21,7 @@
     <string name="id_grupo">Id Grupo</string>
     <string name="fecha_creacion">Fecha de Creacion</string>
     <string name="fecha_modificacion">Fecha de Modificacion</string>
+    <string name="carnet">Carnet</string>
+    <string name="nombres_alumno">Nombres Alumno</string>
+    <string name="apellidos_alumno">Apellidos Alumno</string>
 </resources>

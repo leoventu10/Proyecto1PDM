@@ -9,8 +9,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends ListActivity {
-    String[] menu={"Tabla Docente","Tabla Tipo Evaluador","Tabla Plan de Estudio","Tabla Carrera","Tabla Ciclo","Tabla Grupo","LLenar Base de Datos"};
-    String[] activities={"DocenteMenuActivity","TipoevaluadorMenuActivity","PlandeestudioMenuActivity","CarreraMenuActivity","CicloMenuActivity","GrupoMenuActivity"};
+    String[] menu={"Tabla Docente","Tabla Tipo Evaluador","Tabla Plan de Estudio","Tabla Carrera","Tabla Ciclo","Tabla Grupo","Tabla Alumno","LLenar Base de Datos"};
+    String[] activities={"DocenteMenuActivity","TipoevaluadorMenuActivity","PlandeestudioMenuActivity","CarreraMenuActivity","CicloMenuActivity","GrupoMenuActivity","AlumnoMenuActivity"};
     ControlBDProyec BDhelper;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -22,7 +22,7 @@ public class MainActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l,View v,int position,long id){
         super.onListItemClick(l, v, position, id);
-        if(position!=6){
+        if(position!=7){
             String nombreValue=activities[position];
             try{
                 Class<?> clase=Class.forName("com.example.proyecto1pdm.menu."+nombreValue);

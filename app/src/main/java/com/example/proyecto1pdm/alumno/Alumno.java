@@ -1,4 +1,4 @@
-package com.example.proyecto1pdm;
+package com.example.proyecto1pdm.alumno;
 
 public class Alumno {
     private String carnet;

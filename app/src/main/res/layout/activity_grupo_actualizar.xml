@@ -48,7 +48,5 @@
             android:onClick="limpiarTexto"
             android:text="@string/limpiar" />
     </TableRow>
-    <TableRow>
 
-    </TableRow>
 </TableLayout>

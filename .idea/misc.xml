@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_alumno_actualizar.xml" value="0.2046875" />
+        <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_alumno_consultar.xml" value="0.21875" />
+        <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_alumno_eliminar.xml" value="0.21875" />
+        <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_alumno_insertar.xml" value="0.21875" />
         <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_carrera_actualizar.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_carrera_consultar.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/leone/AndroidStudioProjects/Proyecto1PDM/app/src/main/res/layout/activity_carrera_eliminar.xml" value="0.21927083333333333" />

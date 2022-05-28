@@ -1,4 +1,4 @@
-package com.example.proyecto1pdm;
+package com.example.proyecto1pdm.alumno;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.example.proyecto1pdm.ControlBDProyec;
 import com.example.proyecto1pdm.R;
-import com.example.proyecto1pdm.grupo.Grupo;
+import com.example.proyecto1pdm.alumno.Alumno;
 
 public class AlumnoInsertarActivity extends Activity {
     ControlBDProyec helper;

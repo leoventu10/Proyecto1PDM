@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.proyecto1pdm.alumno.Alumno;
 import com.example.proyecto1pdm.carrera.Carrera;
 import com.example.proyecto1pdm.ciclo.Ciclo;
 import com.example.proyecto1pdm.docente.Docente;
@@ -21,6 +22,7 @@ public class ControlBDProyec {
     private static final String[]camposCarrera = new String[] {"id_carrera","id_plan_estudio","nombre_carrera"};
     private static final String[]camposCiclo = new String[] {"id_ciclo","numero_ciclo"};
     private static final String[]camposGrupo = new String[] {"id_grupo","id_ciclo","id_carrera","fecha_creacion","fecha_modificacion"};
+    private static final String[]camposAlumno = new String[] {"carnet","id_grupo","id_plan_estudio","nombres_alumno","apellidos_alumno"};
     private final Context context;
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
@@ -40,9 +42,10 @@ public class ControlBDProyec {
                 db.execSQL("CREATE TABLE docente(id_docente VARCHAR(6) NOT NULL PRIMARY KEY,nombre_docente VARCHAR(50));");
                 db.execSQL("CREATE TABLE tipoevaluador(id_tipo_evaluador VARCHAR(6) NOT NULL PRIMARY KEY,tipo_evaluador VARCHAR(30),descripcion VARCHAR(100));");
                 db.execSQL("CREATE TABLE plandeestudio(id_plan_estudio VARCHAR(6) NOT NULL PRIMARY KEY, anio_plan_estudio DATE);");
-                db.execSQL("CREATE TABLE carrera(id_carrera VARCHAR(6) NOT NULL PRIMARY KEY, id_plan_estudio VARCHAR(6), nombre_carrera VARCHAR(100), CONSTRAINT fk_carrera FOREIGN KEY (id_plan_estudio) REFERENCES plandeestudio(id_plan_estudio));");
+                db.execSQL("CREATE TABLE carrera(id_carrera VARCHAR(6) NOT NULL PRIMARY KEY, id_plan_estudio VARCHAR(6), nombre_carrera VARCHAR(100), CONSTRAINT fk_carrera_plandeestudio FOREIGN KEY (id_plan_estudio) REFERENCES plandeestudio(id_plan_estudio));");
                 db.execSQL("CREATE TABLE ciclo(id_ciclo VARCHAR(6) NOT NULL PRIMARY KEY, numero_ciclo INTEGER);");
                 db.execSQL("CREATE TABLE grupo(id_grupo VARCHAR(6) NOT NULL PRIMARY KEY, id_ciclo VARCHAR(6), id_carrera VARCHAR(6), fecha_creacion DATE, fecha_modificacion DATE, CONSTRAINT fk_grupo_ciclo FOREIGN KEY (id_ciclo) REFERENCES ciclo(id_ciclo), CONSTRAINT fk_grupo_carrera FOREIGN KEY (id_carrera) REFERENCES carrera(id_carrera));");
+                db.execSQL("CREATE TABLE alumno(carnet VARCHAR(7) NOT NULL PRIMARY KEY, id_grupo VARCHAR(6), id_plan_estudio VARCHAR(6), nombres_alumno VARCHAR(100), apellidos_alumno VARCHAR(100), CONSTRAINT fk_alumno_grupo FOREIGN KEY (id_grupo) REFERENCES grupo(id_grupo), CONSTRAINT fk_alumno_plandeestudio FOREIGN KEY (id_plan_estudio) REFERENCES plandeestudio(id_plan_estudio));");
             }catch(SQLException e){
                 e.printStackTrace();
             }
@@ -165,6 +168,27 @@ public class ControlBDProyec {
         }
         return regInsertados;
     }
+    public String insertarAlumno(Alumno alumno){
+        String regInsertados="Registro Insertado Nº= ";
+        long contador=0;
+        if(verificarIntegridad(alumno,9))
+        {
+            ContentValues grup = new ContentValues();
+            grup.put("carnet", alumno.getCarnet());
+            grup.put("id_grupo", alumno.getId_grupo());
+            grup.put("id_plan_estudio", alumno.getId_plan_estudio());
+            grup.put("nombres_alumno", alumno.getNombres_alumno());
+            grup.put("apellidos_alumno", alumno.getApellidos_alumno());
+            contador=db.insert("alumno", null, grup);
+        }
+        if(contador==-1 || contador==0)
+        {
+            regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
+        } else {
+            regInsertados=regInsertados+contador;
+        }
+        return regInsertados;
+    }
     /*Codigos de Actualizacion de Datos a las diferentes Tablas*/
     public String actualizarDocente(Docente docente){
         if(verificarIntegridad(docente, 1)){
@@ -233,7 +257,18 @@ public class ControlBDProyec {
         }else{
             return "Registro no Existe";
         }
-
+    }
+    public String actualizarAlumno(Alumno alumno){
+        if(verificarIntegridad(alumno, 10)){
+            String[] id = {alumno.getCarnet(), alumno.getId_grupo(), alumno.getId_plan_estudio()};
+            ContentValues cv = new ContentValues();
+            cv.put("nombres_alumno", alumno.getNombres_alumno());
+            cv.put("apellidos_alumno", alumno.getApellidos_alumno());
+            db.update("alumno", cv, "carnet = ? AND id_grupo = ? AND id_plan_estudio = ?", id);
+            return "Registro Actualizado Correctamente";
+        }else{
+            return "Registro no Existe";
+        }
     }
     /*Codigos de Eliminacion de Datos a las diferentes Tablas*/
     public String eliminarDocente(Docente docente){
@@ -280,6 +315,16 @@ public class ControlBDProyec {
         datos=datos+" AND id_ciclo='"+grupo.getId_ciclo()+"'";
         datos=datos+" AND id_carrera='"+grupo.getId_carrera()+"'";
         contador+=db.delete("grupo", datos, null);
+        regAfectados+=contador;
+        return regAfectados;
+    }
+    public String eliminarAlumno(Alumno alumno){
+        String regAfectados="filas afectadas= ";
+        int contador=0;
+        String datos="carnet='"+alumno.getCarnet()+"'";
+        datos=datos+" AND id_grupo='"+alumno.getId_grupo()+"'";
+        datos=datos+" AND id_plan_estudio='"+alumno.getId_plan_estudio()+"'";
+        contador+=db.delete("alumno", datos, null);
         regAfectados+=contador;
         return regAfectados;
     }
@@ -357,6 +402,21 @@ public class ControlBDProyec {
             grupo.setFecha_creacion(cursor.getString(3));
             grupo.setFecha_modificacion(cursor.getString(4));
             return grupo;
+        }else{
+            return null;
+        }
+    }
+    public Alumno consultarAlumno(String carnet, String id_grupo, String id_plan_estudio){
+        String[] id = {carnet, id_grupo, id_plan_estudio};
+        Cursor cursor = db.query("alumno", camposAlumno, "carnet = ? AND id_grupo = ? AND id_plan_estudio = ?", id, null, null, null);
+        if(cursor.moveToFirst()){
+            Alumno alumno = new Alumno();
+            alumno.setCarnet(cursor.getString(0));
+            alumno.setId_grupo(cursor.getString(1));
+            alumno.setId_plan_estudio(cursor.getString(2));
+            alumno.setNombres_alumno(cursor.getString(3));
+            alumno.setApellidos_alumno(cursor.getString(4));
+            return alumno;
         }else{
             return null;
         }
@@ -458,11 +518,39 @@ public class ControlBDProyec {
             }
             case 8:
             {
-                //verificar que al modificar nota exista carnet del alumno, el codigo de materia y el ciclo
+                //verificar que al modificar grupo exista id de grupo, el id de ciclo y el de la carrera
                 Grupo grup = (Grupo) dato;
                 String[] ids = {grup.getId_grupo(), grup.getId_ciclo(), grup.getId_carrera()};
                 abrir();
                 Cursor c = db.query("grupo", null, "id_grupo = ? AND id_ciclo = ? AND id_carrera = ?", ids, null, null, null);
+                if(c.moveToFirst()){
+                    //Se encontraron datos
+                    return true;
+                }
+                return false;
+            }
+            case 9:
+            {
+                //verificar que al insertar Alumno exista id del grupo y el id del plan de estudio
+                Alumno alum = (Alumno) dato;
+                String[] id1 = {alum.getId_grupo()};
+                String[] id2 = {alum.getId_plan_estudio()};
+                //abrir();
+                Cursor cursor1 = db.query("grupo", null, "id_grupo = ?", id1, null, null, null);
+                Cursor cursor2 = db.query("plandeestudio", null, "id_plan_estudio = ?", id2, null, null, null);
+                if(cursor1.moveToFirst() && cursor2.moveToFirst()){
+                    //Se encontraron datos
+                    return true;
+                }
+                return false;
+            }
+            case 10:
+            {
+                //verificar que al modificar alumno exista carnet del alumno, el id del grupo y del plan de estudio
+                Alumno alum = (Alumno) dato;
+                String[] ids = {alum.getCarnet(), alum.getId_grupo(), alum.getId_plan_estudio()};
+                abrir();
+                Cursor c = db.query("alumno", null, "carnet = ? AND id_grupo = ? AND id_plan_estudio = ?", ids, null, null, null);
                 if(c.moveToFirst()){
                     //Se encontraron datos
                     return true;
@@ -491,12 +579,19 @@ public class ControlBDProyec {
         final String[] VFid_carrera = {"ISI198","ISI198","IME199","IME199"};
         final String[] VFfecha_creacion = {"11/02/2021","15/05/2022","01/03/2020","10/04/2021"};
         final String[] VFfecha_modificacion = {"11/02/2021","15/05/2022","01/03/2020","10/04/2021"};
+        final String[] VGcarnet = {"VF12012","SE12058","AH13025","VT69025"};
+        final String[] VGid_grupo = {"GRUP04","GRUP02","GRUP03","GRUP02"};
+        final String[] VGid_plan_estudio = {"PL0001","PL0003","PL0001","PL0004"};
+        final String[] VGnombres_alumno = {"Carlos Leonel","Pedro Antonio","Sara Dolores","Gabriela Patricia"};
+        final String[] VGapellidos_alumno = {"Ramirez Perez","Recinos Lopez","Ventura Guardado","Rodriguez Recinos"};
         abrir();
         db.execSQL("DELETE FROM docente");
         db.execSQL("DELETE FROM tipoevaluador");
         db.execSQL("DELETE FROM plandeestudio");
         db.execSQL("DELETE FROM carrera");
         db.execSQL("DELETE FROM ciclo");
+        db.execSQL("DELETE FROM grupo");
+        db.execSQL("DELETE FROM alumno");
         Docente docente = new Docente();
         for(int i=0;i<4;i++){
             docente.setId_docente(VAid_docente[i]);
@@ -537,6 +632,15 @@ public class ControlBDProyec {
             grup.setFecha_creacion(VFfecha_creacion[i]);
             grup.setFecha_modificacion(VFfecha_modificacion[i]);
             insertarGrupo(grup);
+        }
+        Alumno alum = new Alumno();
+        for(int i=0;i<4;i++){
+            alum.setCarnet(VGcarnet[i]);
+            alum.setId_grupo(VGid_grupo[i]);
+            alum.setId_plan_estudio(VGid_plan_estudio[i]);
+            alum.setNombres_alumno(VGnombres_alumno[i]);
+            alum.setApellidos_alumno(VGapellidos_alumno[i]);
+            insertarAlumno(alum);
         }
         cerrar();
         return "Guardo Correctamente";
