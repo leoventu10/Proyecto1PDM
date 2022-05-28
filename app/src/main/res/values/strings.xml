@@ -18,4 +18,7 @@
     <string name="id_ciclo">Id Ciclo</string>
     <string name="numero_ciclo">Numero Ciclo</string>
     <string name="ciclo_activo">Ciclo Activo</string>
+    <string name="id_grupo">Id Grupo</string>
+    <string name="fecha_creacion">Fecha de Creacion</string>
+    <string name="fecha_modificacion">Fecha de Modificacion</string>
 </resources>

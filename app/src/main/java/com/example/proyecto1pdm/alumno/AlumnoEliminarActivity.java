@@ -1,4 +1,4 @@
-package com.example.proyecto1pdm.grupo;
+package com.example.proyecto1pdm;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,31 +11,31 @@ import com.example.proyecto1pdm.R;
 import com.example.proyecto1pdm.carrera.Carrera;
 import com.example.proyecto1pdm.grupo.Grupo;
 
-public class GrupoEliminarActivity extends Activity {
-    EditText editId_grupo,editId_ciclo,editId_carrera;
+public class AlumnoEliminarActivity extends Activity {
+    EditText editCarnet,editId_grupo,editId_plan_estudio;
     ControlBDProyec controlhelper;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_grupo_eliminar);
+        setContentView(R.layout.activity_alumno_eliminar);
         controlhelper=new ControlBDProyec(this);
+        editCarnet=(EditText)findViewById(R.id.editCarnet);
         editId_grupo=(EditText)findViewById(R.id.editId_grupo);
-        editId_ciclo=(EditText)findViewById(R.id.editId_ciclo);
-        editId_carrera=(EditText)findViewById(R.id.editId_carrera);
+        editId_plan_estudio=(EditText)findViewById(R.id.editId_plan_estudio);
     }
 
-    public void eliminarGrupo(View v){
+    public void eliminarAlumno(View v){
         String regEliminadas;
-        Grupo grup = new Grupo();
-        grup.setId_grupo(editId_grupo.getText().toString());
-        grup.setId_ciclo(editId_ciclo.getText().toString());
-        grup.setId_carrera(editId_carrera.getText().toString());
+        Alumno alumno = new Alumno();
+        alumno.setCarnet(editCarnet.getText().toString());
+        alumno.setId_grupo(editId_grupo.getText().toString());
+        alumno.setId_plan_estudio(editId_plan_estudio.getText().toString());
         controlhelper.abrir();
-        regEliminadas=controlhelper.eliminarGrupo(grup);
+        regEliminadas=controlhelper.eliminarAlumno(alumno);
         controlhelper.cerrar();
         Toast.makeText(this, regEliminadas, Toast.LENGTH_SHORT).show();
+        editCarnet.setText("");
         editId_grupo.setText("");
-        editId_ciclo.setText("");
-        editId_carrera.setText("");
+        editId_plan_estudio.setText("");
     }
 }

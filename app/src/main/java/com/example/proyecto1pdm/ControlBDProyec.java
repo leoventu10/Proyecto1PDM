@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.proyecto1pdm.carrera.Carrera;
 import com.example.proyecto1pdm.ciclo.Ciclo;
 import com.example.proyecto1pdm.docente.Docente;
+import com.example.proyecto1pdm.grupo.Grupo;
 import com.example.proyecto1pdm.plandeestudio.Plandeestudio;
 import com.example.proyecto1pdm.tipoevaluador.Tipoevaluador;
 
@@ -143,6 +144,27 @@ public class ControlBDProyec {
         }
         return regInsertados;
     }
+    public String insertarGrupo(Grupo grupo){
+        String regInsertados="Registro Insertado Nº= ";
+        long contador=0;
+        if(verificarIntegridad(grupo,7))
+        {
+            ContentValues grup = new ContentValues();
+            grup.put("id_grupo", grupo.getId_grupo());
+            grup.put("id_ciclo", grupo.getId_ciclo());
+            grup.put("id_carrera", grupo.getId_carrera());
+            grup.put("fecha_creacion", grupo.getFecha_creacion());
+            grup.put("fecha_modificacion", grupo.getFecha_modificacion());
+            contador=db.insert("grupo", null, grup);
+        }
+        if(contador==-1 || contador==0)
+        {
+            regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
+        } else {
+            regInsertados=regInsertados+contador;
+        }
+        return regInsertados;
+    }
     /*Codigos de Actualizacion de Datos a las diferentes Tablas*/
     public String actualizarDocente(Docente docente){
         if(verificarIntegridad(docente, 1)){
@@ -171,7 +193,7 @@ public class ControlBDProyec {
         if(verificarIntegridad(plandeestudios, 3)){
             String[] id = {plandeestudios.getId_plan_estudio()};
             ContentValues cv = new ContentValues();
-            cv.put("anio_plan_estudio", plandeestudios.getAnio_plan_estudio());
+            cv.put("anio_plan_estudio", String.valueOf(plandeestudios.getAnio_plan_estudio()));
             db.update("plandeestudio", cv, "id_plan_estudio = ?", id);
             return "Registro Actualizado Correctamente";
         }else{
@@ -199,6 +221,19 @@ public class ControlBDProyec {
         }else{
             return "Registro con ciclo " + ciclo.getId_ciclo() + " no existe";
         }
+    }
+    public String actualizarGrupo(Grupo grupo){
+        if(verificarIntegridad(grupo, 8)){
+            String[] id = {grupo.getId_grupo(), grupo.getId_ciclo(), grupo.getId_carrera()};
+            ContentValues cv = new ContentValues();
+            cv.put("fecha_creacion", grupo.getFecha_creacion());
+            cv.put("fecha_modificacion", grupo.getFecha_modificacion());
+            db.update("grupo", cv, "id_grupo = ? AND id_ciclo = ? AND id_carrera = ?", id);
+            return "Registro Actualizado Correctamente";
+        }else{
+            return "Registro no Existe";
+        }
+
     }
     /*Codigos de Eliminacion de Datos a las diferentes Tablas*/
     public String eliminarDocente(Docente docente){
@@ -235,6 +270,16 @@ public class ControlBDProyec {
         String regAfectados="filas afectadas= ";
         int contador=0;
         contador+=db.delete("ciclo", "id_ciclo='"+ciclo.getId_ciclo()+"'", null);
+        regAfectados+=contador;
+        return regAfectados;
+    }
+    public String eliminarGrupo(Grupo grupo){
+        String regAfectados="filas afectadas= ";
+        int contador=0;
+        String datos="id_grupo='"+grupo.getId_grupo()+"'";
+        datos=datos+" AND id_ciclo='"+grupo.getId_ciclo()+"'";
+        datos=datos+" AND id_carrera='"+grupo.getId_carrera()+"'";
+        contador+=db.delete("grupo", datos, null);
         regAfectados+=contador;
         return regAfectados;
     }
@@ -297,6 +342,21 @@ public class ControlBDProyec {
             ciclo.setId_ciclo(cursor.getString(0));
             ciclo.setNumero_ciclo(cursor.getInt(1));
             return ciclo;
+        }else{
+            return null;
+        }
+    }
+    public Grupo consultarGrupo(String id_grupo, String id_ciclo, String id_carrera){
+        String[] id = {id_grupo, id_ciclo, id_carrera};
+        Cursor cursor = db.query("grupo", camposGrupo, "id_grupo = ? AND id_ciclo = ? AND id_carrera = ?", id, null, null, null);
+        if(cursor.moveToFirst()){
+            Grupo grupo = new Grupo();
+            grupo.setId_grupo(cursor.getString(0));
+            grupo.setId_ciclo(cursor.getString(1));
+            grupo.setId_carrera(cursor.getString(2));
+            grupo.setFecha_creacion(cursor.getString(3));
+            grupo.setFecha_modificacion(cursor.getString(4));
+            return grupo;
         }else{
             return null;
         }
@@ -381,6 +441,34 @@ public class ControlBDProyec {
                 }
                 return false;
             }
+            case 7:
+            {
+                //verificar que al insertar Grupo exista id del ciclo y el id de carrera
+                Grupo grup = (Grupo) dato;
+                String[] id1 = {grup.getId_ciclo()};
+                String[] id2 = {grup.getId_carrera()};
+                //abrir();
+                Cursor cursor1 = db.query("ciclo", null, "id_ciclo = ?", id1, null, null, null);
+                Cursor cursor2 = db.query("carrera", null, "id_carrera = ?", id2, null, null, null);
+                if(cursor1.moveToFirst() && cursor2.moveToFirst()){
+                    //Se encontraron datos
+                    return true;
+                }
+                return false;
+            }
+            case 8:
+            {
+                //verificar que al modificar nota exista carnet del alumno, el codigo de materia y el ciclo
+                Grupo grup = (Grupo) dato;
+                String[] ids = {grup.getId_grupo(), grup.getId_ciclo(), grup.getId_carrera()};
+                abrir();
+                Cursor c = db.query("grupo", null, "id_grupo = ? AND id_ciclo = ? AND id_carrera = ?", ids, null, null, null);
+                if(c.moveToFirst()){
+                    //Se encontraron datos
+                    return true;
+                }
+                return false;
+            }
             default:
                 return false;
         }
@@ -397,7 +485,12 @@ public class ControlBDProyec {
         final String[] VDid_plan_estudio = {"PL0002","PL0002","PL0001","PL0004"};
         final String[] VDnombre_carrera = {"Ingenieria en Sistemas","Ingenieria Mecanica","Ingenieria Civil","Ingenieria industrial"};
         final String[] VEid_ciclo = {"CI2019","CI2020","CI2021","CI2022"};
-        final Integer[] VEnumero_ciclo = {8,7,10,6};
+        final Integer[] VEnumero_ciclo = {1,2,2,2};
+        final String[] VFid_grupo = {"GRUP01","GRUP02","GRUP03","GRUP04"};
+        final String[] VFid_ciclo = {"CI2022","CI2020","CI2021","CI2022"};
+        final String[] VFid_carrera = {"ISI198","ISI198","IME199","IME199"};
+        final String[] VFfecha_creacion = {"11/02/2021","15/05/2022","01/03/2020","10/04/2021"};
+        final String[] VFfecha_modificacion = {"11/02/2021","15/05/2022","01/03/2020","10/04/2021"};
         abrir();
         db.execSQL("DELETE FROM docente");
         db.execSQL("DELETE FROM tipoevaluador");
@@ -435,6 +528,15 @@ public class ControlBDProyec {
             ciclo.setId_ciclo(VEid_ciclo[i]);
             ciclo.setNumero_ciclo(VEnumero_ciclo[i]);
             insertarCiclo(ciclo);
+        }
+        Grupo grup = new Grupo();
+        for(int i=0;i<4;i++){
+            grup.setId_grupo(VFid_grupo[i]);
+            grup.setId_ciclo(VFid_ciclo[i]);
+            grup.setId_carrera(VFid_carrera[i]);
+            grup.setFecha_creacion(VFfecha_creacion[i]);
+            grup.setFecha_modificacion(VFfecha_modificacion[i]);
+            insertarGrupo(grup);
         }
         cerrar();
         return "Guardo Correctamente";

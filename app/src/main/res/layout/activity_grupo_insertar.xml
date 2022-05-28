@@ -1,9 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".GrupoInsertarActivity">
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dip"
+    android:stretchColumns="1" >
+    <TableRow>
+        <TextView android:text="@string/id_grupo"/>
+        <EditText
+            android:id="@+id/editId_grupo"
+            android:inputType="text"
+            android:maxLength="6" />
+    </TableRow>
+    <TableRow>
+        <TextView android:text="@string/id_ciclo" />
+        <EditText
+            android:id="@+id/editId_ciclo"
+            android:inputType="text"
+            android:maxLength="6" />
+    </TableRow>
+    <TableRow>
+        <TextView android:text="@string/id_carrera" />
+        <EditText
+            android:id="@+id/editId_carrera"
+            android:inputType="text"
+            android:maxLength="6" />
+    </TableRow>
+    <TableRow>
+        <TextView android:text="@string/fecha_creacion" />
+        <EditText
+            android:id="@+id/editFecha_creacion"
+            android:inputType="date"
+            android:maxLength="10" />
+    </TableRow>
+    <TableRow>
+        <TextView android:text="@string/fecha_modificacion" />
+        <EditText
+            android:id="@+id/editFecha_modificacion"
+            android:inputType="date"
+            android:maxLength="10" />
+    </TableRow>
+    <TableRow>
+        <TextView android:text="@string/opciones" />
+    </TableRow>
+    <TableRow>
+        <Button
+            android:onClick="insertarGrupo"
+            android:text="@string/insertar" />
+        <Button
+            android:onClick="limpiarTexto"
+            android:text="@string/limpiar" />
+    </TableRow>
+</TableLayout>

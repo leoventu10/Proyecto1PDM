@@ -1,10 +1,13 @@
-package com.example.proyecto1pdm;
+package com.example.proyecto1pdm.grupo;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.proyecto1pdm.ControlBDProyec;
+import com.example.proyecto1pdm.R;
 
 public class GrupoInsertarActivity extends Activity {
     ControlBDProyec helper;
@@ -30,7 +33,7 @@ public class GrupoInsertarActivity extends Activity {
         String id_carrera = editId_carrera.getText().toString();
         String fecha_creacion = editFecha_creacion.getText().toString();
         String fecha_modificacion = editFecha_modificacion.getText().toString();
-        Grupo grupo = new Grupo();
+        Grupo grupo= new Grupo();
         grupo.setId_grupo(id_grupo);
         grupo.setId_ciclo(id_ciclo);
         grupo.setId_carrera(id_carrera);
